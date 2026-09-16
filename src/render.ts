@@ -34,10 +34,11 @@ export function creditImage(view: CreditView, peak: PeakStatus): string {
 /** The peak key: current state, countdown to the next change, and what comes next. */
 export function peakImage(peak: PeakStatus, now: Date): string {
 	const colour = peak.peak ? PEAK_COLOUR : OFF_PEAK_COLOUR;
+	const countdown = formatCountdown(peak.nextChange.getTime() - now.getTime());
 	return svg(
 		`<rect x="0" y="0" width="144" height="40" fill="${colour}"/>` +
 			text(72, 29, 22, "#FFFFFF", peak.peak ? "PEAK" : "OFF-PEAK", true) +
-			text(72, 90, 32, "#FFFFFF", formatCountdown(peak.nextChange.getTime() - now.getTime()), true) +
+			text(72, 90, countdown.length <= 6 ? 32 : 27, "#FFFFFF", countdown, true) +
 			text(72, 122, 17, MUTED, peak.peak ? "until off-peak" : "until peak"),
 	);
 }

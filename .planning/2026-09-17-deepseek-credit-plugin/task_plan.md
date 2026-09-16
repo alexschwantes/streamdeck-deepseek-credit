@@ -5,8 +5,8 @@ A small Windows Stream Deck plugin that shows, at a glance, how much DeepSeek AP
 whether DeepSeek is currently charging peak or off-peak rates (and how long until that changes).
 
 ## Next Step
-Phase 6: README and package are done; the owner walks the manual checklist in `findings.md` on Windows with a
-real Stream Deck and records results in `progress.md`.
+Owner: on Windows, run `npm install && npm run pack`, install `dist/com.example.deepseek-credit.streamDeckPlugin`,
+and walk the manual checklist in `findings.md` with a real Stream Deck. Record results in `progress.md`.
 
 ## Current Phase
 Phase 6
@@ -73,12 +73,12 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 - **Status:** complete (hardware behaviour checked in Phase 6)
 
 ### Phase 6: Verify on hardware, package, document
-- [ ] Walk the manual checklist in `findings.md` on Windows with a real Stream Deck; record results in `progress.md`
-- [ ] Produce the installable plugin package
-- [ ] README: what it does, how to get and enter an API key (and where it's stored), the peak schedule source,
+- [ ] **(owner, needs Windows + Stream Deck)** Walk the manual checklist in `findings.md` on Windows with a real Stream Deck; record results in `progress.md`
+- [x] Produce the installable plugin package (`npm run pack`; built on Linux, not committed)
+- [x] README: what it does, how to get and enter an API key (and where it's stored), the peak schedule source,
       and the developer commands
 - **Acceptance:** every checklist item observed; the package installs and works on a clean Stream Deck.
-- **Status:** pending
+- **Status:** in_progress — everything except the hardware checklist is done
 
 ---
 
@@ -114,6 +114,7 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 | Key faces are 144×144 SVG strings via `setImage`; `UserTitleEnabled: false` | Colour and layout `setTitle` can't do; a user title would overlap |
 | Credit face: currency, amount (red + "INSUFFICIENT" when `is_available` false), PEAK/OFF-PEAK bar. Peak face: state, countdown, "until …" | FR-2, FR-3, FR-7 |
 | Property Inspector: `sdpi-select` "show" (per key) + `sdpi-password setting="apiKey" global` | Elgato's guide: user API keys in global settings; no PI ↔ plugin code needed |
+| Countdown drawn at 27 px instead of 32 px when longer than 6 characters (e.g. `23h 59m`) | Preview render showed 7 characters crowd a 144 px key |
 | Log only the balance outcome kind (and HTTP status) | NFR-7; DeepSeek's 401 body echoes part of the key |
 | Tests import `../src/x.ts`; tsconfig `rewriteRelativeImportExtensions` + tests in `include` | Node type stripping needs `.ts` specifiers; `allowImportingTsExtensions` breaks the rollup build (TS5096) |
 

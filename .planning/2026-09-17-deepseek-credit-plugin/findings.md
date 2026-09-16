@@ -86,7 +86,9 @@ configurable refresh interval · Marketplace publication.
 - [ ] Pressing a key refreshes immediately
 - [ ] Peak state and countdown match the real clock, including flipping at a boundary
 - [ ] The API key appears nowhere in the plugin's log files
-- [ ] Key text is legible and well-aligned on the hardware
+- [ ] Key text is legible and well-aligned on the hardware (fonts: Segoe UI; the Linux preview used DejaVu Sans)
+- [ ] Settings panel: "Show" switches a key between credit and peak; the API key field is masked
+- [ ] Credit key shows the real balance and currency; the PEAK/OFF-PEAK bar matches the peak key
 
 ---
 
@@ -97,6 +99,14 @@ The previous planning session prototyped outside this repo. These observations m
 - The TypeScript build may succeed despite type errors; run a separate typecheck.
 - Converting balance strings with a plain number conversion turns blank/null into 0 — validate explicitly.
 - Stream Deck can accept an SVG image directly for a key face.
+
+## Verified on Linux (not a substitute for the checklist)
+- A fake Stream Deck WebSocket host ran the built plugin: key appear, no key, key entered, invalid key, key press,
+  per-key mode switch, key cleared, and the whole-minute redraw all behaved as intended; the key was not logged.
+- Key faces rendered with resvg (DejaVu Sans) fit within 144×144 for long amounts (`12345.67`), long countdowns
+  (`23h 59m`) and the longest messages (`Unexpected response`, `INSUFFICIENT`).
+- Not verifiable here: Stream Deck's own SVG renderer and fonts, the sdpi-components panel, settings persistence
+  across restarts, Windows networking behaviour.
 
 ## Technical Decisions
 | Decision | Rationale |

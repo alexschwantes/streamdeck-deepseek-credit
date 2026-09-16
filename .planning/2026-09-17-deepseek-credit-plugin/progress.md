@@ -117,3 +117,20 @@
 |-------|------------|
 | Heredoc into `ui/` failed: directory didn't exist (template `ui/` not copied in Phase 2) | Created the directory |
 | Store tests cancelled: a test awaited a fake request it never resolved | Don't await that refresh |
+
+## Session: 2026-09-17 — Phase 6 (Package, document; hardware pending)
+
+### Actions Taken
+- Rendered all key faces to PNG with `@resvg/resvg-js` (scratchpad only) to check layout; shrank long countdowns.
+- Wrote the full README (what it shows, API key and where it's stored, peak hours + source, install, dev commands).
+- `npm run pack` → `dist/com.example.deepseek-credit.streamDeckPlugin` (12 files, 277 kB; `logs/` excluded).
+- Added three checklist items to findings.md (settings panel, real balance, bar vs peak key).
+- Left for the owner: the manual checklist on Windows with a real Stream Deck.
+
+### Test Results
+| Test | Expected | Actual | Status |
+|------|----------|--------|--------|
+| Face preview (8 variants incl. `12345.67`, `23h 59m`, `Unexpected response`) | text inside the key | fits after countdown size tweak | Pass |
+| `npm test` / `npm run typecheck` | pass | 27 pass / no errors | Pass |
+| `npm run pack` | package created | 12 files | Pass |
+| Manual checklist on Windows | all items observed | not run (no hardware here) | Pending (owner) |
