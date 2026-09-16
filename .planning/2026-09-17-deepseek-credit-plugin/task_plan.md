@@ -5,10 +5,11 @@ A small Windows Stream Deck plugin that shows, at a glance, how much DeepSeek AP
 whether DeepSeek is currently charging peak or off-peak rates (and how long until that changes).
 
 ## Next Step
-Phase 5: wire peak logic and balance into the Stream Deck action, with the API key settings panel.
+Phase 6: README and package are done; the owner walks the manual checklist in `findings.md` on Windows with a
+real Stream Deck and records results in `progress.md`.
 
 ## Current Phase
-Phase 5
+Phase 6
 
 ## Guiding Principles
 - **Requirements first, code second.** This plan says *what* and *why*; implementation details are decided
@@ -60,16 +61,16 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 - **Status:** complete
 
 ### Phase 5: The key on the deck
-- [ ] User enters the API key once in the action's settings panel; it applies to every key and takes effect
+- [x] User enters the API key once in the action's settings panel; it applies to every key and takes effect
       immediately (FR-6)
-- [ ] Each key can show credit or peak status; the credit view also carries a peak/off-peak indicator (FR-2, FR-3)
-- [ ] Peak state and countdown stay accurate to the minute without extra API calls (FR-5, NFR-6)
-- [ ] Balance refreshes on a fixed, modest interval, on start-up, when the key changes, and on key press;
+- [x] Each key can show credit or peak status; the credit view also carries a peak/off-peak indicator (FR-2, FR-3)
+- [x] Peak state and countdown stay accurate to the minute without extra API calls (FR-5, NFR-6)
+- [x] Balance refreshes on a fixed, modest interval, on start-up, when the key changes, and on key press;
       multiple keys share one request (FR-8, NFR-6)
-- [ ] Clear on-key messages for "no API key", errors, and "balance not sufficient" (FR-6, FR-7)
-- [ ] The API key never appears in logs (NFR-7)
+- [x] Clear on-key messages for "no API key", errors, and "balance not sufficient" (FR-6, FR-7)
+- [x] The API key never appears in logs (NFR-7)
 - **Acceptance:** typecheck, tests and validation pass; behaviour confirmed on a real deck in Phase 6.
-- **Status:** pending
+- **Status:** complete (hardware behaviour checked in Phase 6)
 
 ### Phase 6: Verify on hardware, package, document
 - [ ] Walk the manual checklist in `findings.md` on Windows with a real Stream Deck; record results in `progress.md`
@@ -105,6 +106,15 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 | Amount kept as the API's string, accepted only if it matches `-?digits(.digits)?`; `is_available` must be boolean | No fake 0.00 from `Number("")`; rejects `Infinity`, `1e3`, non-strings |
 | Use the first `balance_infos` entry | Docs show one entry per account; see Open Questions |
 | 10 s request timeout via `AbortSignal.timeout`, covering headers and body | Stalled body reported as timeout, not a hang |
+| `BalanceStore` (no SDK import) owns API key, cached balance, in-flight dedupe and staleness; the action only wires events and draws | Refresh coordination is testable with `node --test` (decorators aren't erasable, so the action file can't run under type stripping) |
+| Source uses erasable TypeScript only outside the action (no parameter properties, enums) | Node type stripping in tests |
+| One per-minute `setTimeout` aligned to the whole minute redraws all visible keys from cache and refreshes if ≥ 5 min stale | Countdown/peak accurate to the minute with no network (FR-5, NFR-6) |
+| `useExperimentalMessageIdentifiers = true` | `getGlobalSettings`/`getSettings` no longer echo as did-receive events; `getSettings` served from SDK cache |
+| A result for a replaced API key is dropped; a changed key resets to "Loading" | Stale results never show against the new key |
+| Key faces are 144×144 SVG strings via `setImage`; `UserTitleEnabled: false` | Colour and layout `setTitle` can't do; a user title would overlap |
+| Credit face: currency, amount (red + "INSUFFICIENT" when `is_available` false), PEAK/OFF-PEAK bar. Peak face: state, countdown, "until …" | FR-2, FR-3, FR-7 |
+| Property Inspector: `sdpi-select` "show" (per key) + `sdpi-password setting="apiKey" global` | Elgato's guide: user API keys in global settings; no PI ↔ plugin code needed |
+| Log only the balance outcome kind (and HTTP status) | NFR-7; DeepSeek's 401 body echoes part of the key |
 | Tests import `../src/x.ts`; tsconfig `rewriteRelativeImportExtensions` + tests in `include` | Node type stripping needs `.ts` specifiers; `allowImportingTsExtensions` breaks the rollup build (TS5096) |
 
 ## Open Questions

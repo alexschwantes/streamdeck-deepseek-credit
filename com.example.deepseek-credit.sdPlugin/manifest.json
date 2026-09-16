@@ -8,6 +8,7 @@
 			"UUID": "com.example.deepseek-credit.status",
 			"Icon": "imgs/actions/status/icon",
 			"Tooltip": "Shows remaining DeepSeek API credit and peak / off-peak pricing.",
+			"PropertyInspectorPath": "ui/deepseek-credit.html",
 			"Controllers": [
 				"Keypad"
 			],
@@ -16,7 +17,8 @@
 					"Image": "imgs/actions/status/key",
 					"TitleAlignment": "middle"
 				}
-			]
+			],
+			"UserTitleEnabled": false
 		}
 	],
 	"Category": "DeepSeek Credit",

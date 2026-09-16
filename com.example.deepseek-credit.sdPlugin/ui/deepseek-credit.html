@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <title>DeepSeek Credit Settings</title>
+    <meta charset="utf-8" />
+    <script src="https://sdpi-components.dev/releases/v4/sdpi-components.js"></script>
+</head>
+
+<body>
+    <!--
+        Learn more about property inspector components at https://sdpi-components.dev/docs/components
+    -->
+    <sdpi-item label="Show">
+        <sdpi-select setting="show" default="credit">
+            <option value="credit">Credit balance</option>
+            <option value="peak">Peak / off-peak</option>
+        </sdpi-select>
+    </sdpi-item>
+
+    <!-- "global": one API key for every key, kept in Stream Deck's global settings. -->
+    <sdpi-item label="API key">
+        <sdpi-password setting="apiKey" global placeholder="sk-..."></sdpi-password>
+    </sdpi-item>
+
+    <sdpi-item>
+        <details>
+            <summary>About</summary>
+            <p>Create an API key at platform.deepseek.com. It applies to every DeepSeek Credit key and is stored in
+                Stream Deck's settings on this PC, not in a password manager.</p>
+            <p>Peak / off-peak is worked out from DeepSeek's published hours, with no API call. The balance refreshes
+                every 5 minutes, or when you press the key.</p>
+        </details>
+    </sdpi-item>
+</body>
+
+</html>
