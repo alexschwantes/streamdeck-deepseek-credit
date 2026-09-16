@@ -5,10 +5,10 @@ A small Windows Stream Deck plugin that shows, at a glance, how much DeepSeek AP
 whether DeepSeek is currently charging peak or off-peak rates (and how long until that changes).
 
 ## Next Step
-Phase 3: implement and test the peak / off-peak schedule logic.
+Phase 4: fetch and interpret the DeepSeek balance, with tests against a simulated API.
 
 ## Current Phase
-Phase 3
+Phase 4
 
 ## Guiding Principles
 - **Requirements first, code second.** This plan says *what* and *why*; implementation details are decided
@@ -43,13 +43,13 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 - **Status:** complete (Windows load check deferred to Phase 6)
 
 ### Phase 3: Peak / off-peak logic
-- [ ] Determine peak vs off-peak for any moment, from DeepSeek's published schedule (FR-4)
-- [ ] Determine the next change of state, including across weekends and year-end (FR-5)
-- [ ] Format the time remaining in a compact, human-readable form (FR-5)
-- [ ] Keep the schedule in one clearly documented place so it's easy to update (NFR-4)
-- [ ] Automated tests cover window edges, weekends, and the result not depending on the PC's time zone
+- [x] Determine peak vs off-peak for any moment, from DeepSeek's published schedule (FR-4)
+- [x] Determine the next change of state, including across weekends and year-end (FR-5)
+- [x] Format the time remaining in a compact, human-readable form (FR-5)
+- [x] Keep the schedule in one clearly documented place so it's easy to update (NFR-4)
+- [x] Automated tests cover window edges, weekends, and the result not depending on the PC's time zone
 - **Acceptance:** tests pass and cover the boundary cases in `findings.md`. (FR-4, FR-5, NFR-3)
-- **Status:** pending
+- **Status:** complete
 
 ### Phase 4: Credit balance retrieval
 - [ ] Fetch the balance from DeepSeek's official balance endpoint using the user's API key (FR-1)
@@ -99,6 +99,9 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 | No Property Inspector yet; the template's sample PI was removed | Added in Phase 5 when there is a setting to edit |
 | Tests: bare `node --test`, TypeScript run directly; `engines.node >= 22.18` | No test dependency (NFR-5); type stripping is on by default from Node 22.18 |
 | `validate` and `pack` scripts build first; `pack` writes to ignored `dist/` | Validate needs `bin/` to exist on a fresh checkout |
+| Peak schedule as day list + minute windows in `src/peak.ts`; next change = first window edge (≤ 1 week ahead) that flips the state | Data-only edit when DeepSeek changes hours (NFR-4); handles half-hour boundaries and adjacent windows |
+| Countdown rounds **up** to the minute; ≥ 1 day shows `Nd Hh`, else `Hh Mm`, else `Mm` | Never shows "0m" before the flip; value changes exactly on whole minutes |
+| Tests import `../src/x.ts`; tsconfig `rewriteRelativeImportExtensions` + tests in `include` | Node type stripping needs `.ts` specifiers; `allowImportingTsExtensions` breaks the rollup build (TS5096) |
 
 ## Open Questions
 | Question | Default until decided |
@@ -112,3 +115,4 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 ## Errors Encountered
 | Error | Attempt | Resolution |
 |-------|---------|------------|
+| TS5096 from rollup: `allowImportingTsExtensions` needs `noEmit` | 1 | Used `rewriteRelativeImportExtensions` instead |

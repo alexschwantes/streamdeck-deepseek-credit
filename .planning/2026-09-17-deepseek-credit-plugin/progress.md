@@ -43,3 +43,27 @@
 | `npm run validate` | builds and validates | "Validation successful" | Pass |
 | `npm run pack` | package in `dist/` | `dist/com.example.deepseek-credit.streamDeckPlugin`, 11 files | Pass |
 | Loads in Stream Deck on Windows | appears | not possible on Linux | Deferred to Phase 6 |
+- Fresh clone of the Phase 2 commit: `npm ci` + `npm run validate` + `npm run pack` pass.
+
+## Session: 2026-09-17 — Phase 3 (Peak / off-peak logic)
+
+### Actions Taken
+- Re-checked DeepSeek pricing page: schedule unchanged (01:00–04:00 and 06:00–10:00 UTC, Mon–Fri).
+- `src/peak.ts`: schedule constants (documented, with source link), `isPeak`, `peakStatus`, `formatCountdown`.
+- `test/peak.test.ts`: all findings.md boundary cases plus extras (last ms before a window, Monday midnight,
+  Saturday inside a weekday window, New Year's Day Friday, leap day); same cases under 4 other `TZ` values;
+  minute-by-minute check of `nextChange` across a week (and at :30 s) against an independent backward walk.
+- Tests are now type-checked (`tsconfig` includes `test/`).
+
+### Test Results
+| Test | Expected | Actual | Status |
+|------|----------|--------|--------|
+| `npm test` | all pass | 6 tests (2 suites), 0 fail | Pass |
+| Mutation: `getUTCDay` → `getDay`, run with `TZ=UTC` | time-zone test fails | "does not depend on the PC's time zone" failed | Pass (test is effective) |
+| `npm run typecheck` | no errors, includes tests | no errors; `test/peak.test.ts` listed | Pass |
+| `npm run validate` | pass, no rollup warnings | pass (after TS5096 fix) | Pass |
+
+### Errors
+| Error | Resolution |
+|-------|------------|
+| rollup TS5096 with `allowImportingTsExtensions` | `rewriteRelativeImportExtensions` |
