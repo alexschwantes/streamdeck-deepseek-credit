@@ -5,11 +5,10 @@ A small Windows Stream Deck plugin that shows, at a glance, how much DeepSeek AP
 whether DeepSeek is currently charging peak or off-peak rates (and how long until that changes).
 
 ## Next Step
-Phase 2: create the project with Elgato's official scaffold, strip it to a single action targeting
-Windows, and confirm it builds, validates and loads in Stream Deck.
+Phase 3: implement and test the peak / off-peak schedule logic.
 
 ## Current Phase
-Phase 2
+Phase 3
 
 ## Guiding Principles
 - **Requirements first, code second.** This plan says *what* and *why*; implementation details are decided
@@ -33,13 +32,15 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 - **Status:** complete
 
 ### Phase 2: Project foundation
-- [ ] Create the plugin with the official Stream Deck scaffold (TypeScript)
-- [ ] Remove the sample content; one action, Windows-only, English-only, placeholder UUID
-- [ ] Provide simple commands to build, test, validate and package
-- [ ] Build output and dependencies are not committed
+- [x] Create the plugin from the official Stream Deck scaffold template (TypeScript) — copied from
+      `elgatosf/streamdeck` `packages/cli/template` because `streamdeck create` fails on Linux
+- [x] Remove the sample content; one action, Windows-only, English-only, placeholder UUID
+- [x] Provide simple commands to build, test, validate and package
+- [x] Build output and dependencies are not committed
+- [ ] Plugin appears in Stream Deck on Windows — cannot be checked on Linux; deferred to Phase 6 checklist
 - **Acceptance:** a fresh checkout builds, validates and packages with documented commands; the empty plugin
   appears in Stream Deck on Windows. (NFR-1, NFR-2, NFR-5)
-- **Status:** pending
+- **Status:** complete (Windows load check deferred to Phase 6)
 
 ### Phase 3: Peak / off-peak logic
 - [ ] Determine peak vs off-peak for any moment, from DeepSeek's published schedule (FR-4)
@@ -92,6 +93,12 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 | API key stored in Stream Deck global settings | Elgato's guidance for secrets; entered once for all keys |
 | Show the currency the API returns; no currency picker | The response already states it |
 | Low balance ("not sufficient") still shows the number, with a visual flag | The user still wants to see the amount |
+| Scaffold = files copied from `elgatosf/streamdeck` `packages/cli/template` (commit 55be043), rendered by hand as `streamdeck create` would | `streamdeck create` fails on Linux (user note); same output, no wizard |
+| UUID `com.example.deepseek-credit`, action `com.example.deepseek-credit.status`, class `DeepSeekCredit` | Placeholder carried over from previous session |
+| Logger level `info`, not the template's `trace` | Trace logs every message, including settings holding the API key (NFR-7) |
+| No Property Inspector yet; the template's sample PI was removed | Added in Phase 5 when there is a setting to edit |
+| Tests: bare `node --test`, TypeScript run directly; `engines.node >= 22.18` | No test dependency (NFR-5); type stripping is on by default from Node 22.18 |
+| `validate` and `pack` scripts build first; `pack` writes to ignored `dist/` | Validate needs `bin/` to exist on a fresh checkout |
 
 ## Open Questions
 | Question | Default until decided |
@@ -99,6 +106,8 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 | Final plugin UUID? (cannot change once published) | Placeholder for local use; decide before any Marketplace release |
 | Custom icons or scaffold placeholders? | Placeholders for v1 |
 | Are both a credit key and a dedicated peak key needed, or is the indicator on the credit key enough? | Offer both; drop one if unused |
+| Keep manifest `Nodejs.Debug: "enabled"` (template default) in the packaged plugin? | Kept for development; revisit in Phase 6 |
+| Manifest `Author` | `highland-hamish` (git user name) |
 
 ## Errors Encountered
 | Error | Attempt | Resolution |
