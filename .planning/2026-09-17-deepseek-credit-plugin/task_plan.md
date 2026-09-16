@@ -5,10 +5,10 @@ A small Windows Stream Deck plugin that shows, at a glance, how much DeepSeek AP
 whether DeepSeek is currently charging peak or off-peak rates (and how long until that changes).
 
 ## Next Step
-Phase 4: fetch and interpret the DeepSeek balance, with tests against a simulated API.
+Phase 5: wire peak logic and balance into the Stream Deck action, with the API key settings panel.
 
 ## Current Phase
-Phase 4
+Phase 5
 
 ## Guiding Principles
 - **Requirements first, code second.** This plan says *what* and *why*; implementation details are decided
@@ -52,12 +52,12 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 - **Status:** complete
 
 ### Phase 4: Credit balance retrieval
-- [ ] Fetch the balance from DeepSeek's official balance endpoint using the user's API key (FR-1)
-- [ ] Distinguish success, invalid key, other HTTP errors, timeout, network failure and malformed responses (FR-7)
-- [ ] Never show a made-up number (e.g. 0.00) when the response is missing or malformed (FR-7)
-- [ ] Automated tests with a simulated API; no real network calls
+- [x] Fetch the balance from DeepSeek's official balance endpoint using the user's API key (FR-1)
+- [x] Distinguish success, invalid key, other HTTP errors, timeout, network failure and malformed responses (FR-7)
+- [x] Never show a made-up number (e.g. 0.00) when the response is missing or malformed (FR-7)
+- [x] Automated tests with a simulated API; no real network calls
 - **Acceptance:** tests pass for each outcome above. (FR-1, FR-7, NFR-3)
-- **Status:** pending
+- **Status:** complete
 
 ### Phase 5: The key on the deck
 - [ ] User enters the API key once in the action's settings panel; it applies to every key and takes effect
@@ -101,6 +101,10 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 | `validate` and `pack` scripts build first; `pack` writes to ignored `dist/` | Validate needs `bin/` to exist on a fresh checkout |
 | Peak schedule as day list + minute windows in `src/peak.ts`; next change = first window edge (≤ 1 week ahead) that flips the state | Data-only edit when DeepSeek changes hours (NFR-4); handles half-hour boundaries and adjacent windows |
 | Countdown rounds **up** to the minute; ≥ 1 day shows `Nd Hh`, else `Hh Mm`, else `Mm` | Never shows "0m" before the flip; value changes exactly on whole minutes |
+| Balance result is a tagged union: `ok` / `invalid-key` (401) / `http-error` / `timeout` / `network` / `bad-response`; `fetchBalance` never throws | FR-7 distinct states; UI maps kind → text |
+| Amount kept as the API's string, accepted only if it matches `-?digits(.digits)?`; `is_available` must be boolean | No fake 0.00 from `Number("")`; rejects `Infinity`, `1e3`, non-strings |
+| Use the first `balance_infos` entry | Docs show one entry per account; see Open Questions |
+| 10 s request timeout via `AbortSignal.timeout`, covering headers and body | Stalled body reported as timeout, not a hang |
 | Tests import `../src/x.ts`; tsconfig `rewriteRelativeImportExtensions` + tests in `include` | Node type stripping needs `.ts` specifiers; `allowImportingTsExtensions` breaks the rollup build (TS5096) |
 
 ## Open Questions
@@ -111,6 +115,7 @@ Functional requirements (FR-x) and non-functional requirements (NFR-x) live in `
 | Are both a credit key and a dedicated peak key needed, or is the indicator on the credit key enough? | Offer both; drop one if unused |
 | Keep manifest `Nodejs.Debug: "enabled"` (template default) in the packaged plugin? | Kept for development; revisit in Phase 6 |
 | Manifest `Author` | `highland-hamish` (git user name) |
+| If an account ever returns several `balance_infos` (CNY and USD), which to show? | First entry |
 
 ## Errors Encountered
 | Error | Attempt | Resolution |

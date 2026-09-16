@@ -48,6 +48,11 @@ configurable refresh interval · Marketplace publication.
 - Undocumented: rate limits, error body shapes, and what an unfunded account returns. Treat anything
   unexpected as an error state rather than guessing.
 - Source: https://api-docs.deepseek.com/api/get-user-balance
+- Re-checked 2026-09-17: unchanged. Error codes page: 401 = wrong API key, 402 = insufficient balance,
+  429 = rate limit (https://api-docs.deepseek.com/quick_start/error_codes).
+- Live call with a bogus key (2026-09-17): HTTP 401, body
+  `{"error":{"message":"Authentication Fails, Your api key: ****test is invalid","type":"authentication_error",...}}`.
+  The body echoes the key's last 4 characters, so error bodies must not be logged either.
 
 ### Peak / off-peak schedule
 - DeepSeek pricing page: *"Off-peak rates are half of the peak rates. Peak hours are 01:00 - 04:00 and

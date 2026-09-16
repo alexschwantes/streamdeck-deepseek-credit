@@ -67,3 +67,19 @@
 | Error | Resolution |
 |-------|------------|
 | rollup TS5096 with `allowImportingTsExtensions` | `rewriteRelativeImportExtensions` |
+
+## Session: 2026-09-17 — Phase 4 (Credit balance retrieval)
+
+### Actions Taken
+- Re-checked the balance API and error-code docs (unchanged; findings.md updated).
+- `src/balance.ts`: `fetchBalance(apiKey, { fetch, timeoutMs })` → tagged `Balance` result; strict parsing.
+- `test/balance.test.ts`: request shape, ok (USD, CNY), insufficient balance, 401, 402/429/500/503, network,
+  timeout, malformed amounts, unexpected shapes. All with a fake `fetch`, no network.
+
+### Test Results
+| Test | Expected | Actual | Status |
+|------|----------|--------|--------|
+| `npm test` | all pass | 15 tests, 0 fail, 0 cancelled | Pass |
+| `npm run typecheck` | no errors | no errors | Pass |
+| Real `fetch` vs local server: no response / stalled body / ok / refused (manual script) | timeout / timeout / ok / network | as expected | Pass |
+| Live `GET /user/balance` with a bogus key | 401 → `invalid-key` | 401 → `invalid-key` | Pass |
