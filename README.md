@@ -50,14 +50,33 @@ Requires Node.js 22.18 or later (the tests run TypeScript directly with `node --
 |---------|--------------|
 | `npm install` | Install dependencies |
 | `npm run build` | Build `src/` into `com.example.deepseek-credit.sdPlugin/bin/` |
-| `npm run watch` | Rebuild on change and restart the plugin in Stream Deck |
+| `npm run watch` | Rebuild on change, then reload the plugin in Stream Deck |
+| `npm run reload` | Set up Stream Deck if needed, then reload the plugin once |
 | `npm run typecheck` | Type-check source and tests (the build does not fail on type errors) |
 | `npm test` | Run the automated tests (no Stream Deck or network needed) |
 | `npm run validate` | Build, then validate the plugin with the Stream Deck CLI |
 | `npm run pack` | Build, then package to `dist/com.example.deepseek-credit.streamDeckPlugin` |
 
-To run it from source in Stream Deck on Windows: `npm run build`, then
-`npx streamdeck link com.example.deepseek-credit.sdPlugin`.
+### Running from source
+
+`npm run watch` and `npm run reload` both go through [`scripts/reload.mjs`](scripts/reload.mjs), which sets
+Stream Deck up on first run. Expect to restart Stream Deck twice, once for each setup step it reports:
+
+1. **Developer mode.** Stream Deck ignores plugin reloads and linked plugins unless it is on. The script turns
+   it on (`npx streamdeck dev`, which sets `developer_mode` under
+   `HKCU\Software\Elgato Systems GmbH\StreamDeck`; undo with `npx streamdeck dev -d`).
+2. **Linking.** The script links this folder into Stream Deck's plugin folder, so a build is picked up without
+   copying anything.
+
+After that, `npm run watch` rebuilds and reloads on every save.
+
+Two Stream Deck behaviours are worth knowing, because both fail silently and look like a broken build:
+
+- `streamdeck restart` only opens `streamdeck://plugins/restart/<uuid>` and reports success whether or not
+  Stream Deck acts on it. With developer mode off it does nothing at all. The script kills the plugin's node
+  process instead, and Stream Deck relaunches it.
+- A plugin installed from a `.streamDeckPlugin` file is a *copy*, so builds in this repo never reach it. The
+  script refuses to run against a copied install rather than reloading stale code.
 
 | File | Purpose |
 |------|---------|
