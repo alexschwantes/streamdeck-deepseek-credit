@@ -15,13 +15,13 @@ function texts(svg: string): string[] {
 describe("creditImage", () => {
 	it("shows currency, amount and the peak state", () => {
 		const svg = creditImage({ kind: "ok", amount: "110.00", currency: "CNY", available: true }, peak);
-		assert.deepEqual(texts(svg), ["CNY", "110.00", "PEAK"]);
+		assert.deepEqual(texts(svg), ["CNY", "¥110.00", "PEAK"]);
 		assert.match(svg, /^<svg [^>]*width="144" height="144"/);
 	});
 
 	it("still shows the amount when the balance is not sufficient, flagged", () => {
 		const svg = creditImage({ kind: "ok", amount: "0.00", currency: "USD", available: false }, offPeak);
-		assert.deepEqual(texts(svg), ["USD", "0.00", "INSUFFICIENT", "OFF-PEAK"]);
+		assert.deepEqual(texts(svg), ["USD", "$0.00", "INSUFFICIENT", "OFF-PEAK"]);
 	});
 
 	it("shows a distinct message for each state without a balance", () => {
@@ -37,6 +37,11 @@ describe("creditImage", () => {
 		for (const [view, message] of cases) {
 			assert.deepEqual(texts(creditImage(view, offPeak)), [...message, "OFF-PEAK"]);
 		}
+	});
+
+	it("falls back to the bare amount when the API sends a currency Intl cannot format", () => {
+		const svg = creditImage({ kind: "ok", amount: "1.00", currency: "NOT-A-CODE", available: true }, offPeak);
+		assert.deepEqual(texts(svg), ["NOT-A-CODE", "1.00", "OFF-PEAK"]);
 	});
 
 	it("escapes text from the API", () => {

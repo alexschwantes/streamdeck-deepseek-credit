@@ -22,10 +22,11 @@ export function creditImage(view: CreditView, peak: PeakStatus): string {
 	let body: string;
 	if (view.kind === "ok") {
 		const colour = view.available ? "#FFFFFF" : PEAK_COLOUR;
+		const amount = formatAmount(view.amount, view.currency);
 		body =
 			text(72, 32, 16, MUTED, view.currency, true) +
 			rule(accent) +
-			text(72, 86, amountSize(view.amount), colour, view.amount, true) +
+			text(72, 86, amountSize(amount), colour, amount, true) +
 			(view.available ? "" : text(72, 104, 13, PEAK_COLOUR, "INSUFFICIENT", true));
 	} else {
 		const [first, second] = creditMessage(view);
@@ -66,8 +67,26 @@ export function creditMessage(view: Exclude<CreditView, { kind: "ok" }>): [strin
 	}
 }
 
+/**
+ * Adds the currency symbol and thousands separators: "$0.58", "¥110.00", "$1,234.56". The currency comes from
+ * the API, so an unknown code falls back to the bare amount rather than throwing.
+ */
+function formatAmount(amount: string, currency: string): string {
+	try {
+		return new Intl.NumberFormat("en-US", { style: "currency", currency, currencyDisplay: "narrowSymbol" }).format(
+			Number(amount),
+		);
+	} catch {
+		return amount;
+	}
+}
+
+/**
+ * The largest font size that keeps the amount inside the key, from Segoe UI Bold's roughly 0.55em average
+ * glyph width and a 132px usable width. Capped so a short amount does not grow absurd.
+ */
 function amountSize(amount: string): number {
-	return amount.length <= 5 ? 44 : amount.length <= 7 ? 36 : amount.length <= 9 ? 28 : 21;
+	return Math.min(44, Math.floor(132 / (amount.length * 0.55)));
 }
 
 /** A short accent rule under the top label. */
