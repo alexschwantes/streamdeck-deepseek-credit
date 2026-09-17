@@ -9,10 +9,10 @@ import streamDeck, {
 
 import { BalanceStore } from "../balance-store.ts";
 import { peakStatus } from "../peak.ts";
-import { creditImage, peakImage, toDataUri } from "../render.ts";
+import { bothImage, creditImage, peakImage, toDataUri } from "../render.ts";
 
 /** Per-key settings: what the key shows. */
-type KeySettings = { show?: "credit" | "peak" };
+type KeySettings = { show?: "credit" | "peak" | "both" };
 
 /** Plugin-wide settings, entered once in the property inspector. */
 type GlobalSettings = { apiKey?: string };
@@ -79,9 +79,15 @@ export class DeepSeekCredit extends SingletonAction<KeySettings> {
 	async #draw(key: KeyAction<KeySettings>, settings: KeySettings): Promise<void> {
 		const now = new Date();
 		const peak = peakStatus(now);
+		const face =
+			settings.show === "peak"
+				? peakImage(peak, now)
+				: settings.show === "both"
+					? bothImage(this.#store.view, peak, now)
+					: creditImage(this.#store.view, peak);
 		try {
 			// Stream Deck renders an SVG only when it arrives as a data URI; a bare "<svg …>" string is ignored.
-			await key.setImage(toDataUri(settings.show === "peak" ? peakImage(peak, now) : creditImage(this.#store.view, peak)));
+			await key.setImage(toDataUri(face));
 		} catch (err) {
 			streamDeck.logger.error("Failed to draw key", err);
 		}

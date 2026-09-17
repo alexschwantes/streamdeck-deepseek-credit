@@ -25,6 +25,7 @@ export function creditImage(view: CreditView, peak: PeakStatus): string {
 		const amount = formatAmount(view.amount, view.currency);
 		body =
 			text(72, 32, 16, MUTED, view.currency, true) +
+			// text(72, 32, 16, MUTED, "Deepseek", true) +
 			rule(accent) +
 			text(72, 86, amountSize(amount), colour, amount, true) +
 			(view.available ? "" : text(72, 104, 13, PEAK_COLOUR, "INSUFFICIENT", true));
@@ -36,14 +37,37 @@ export function creditImage(view: CreditView, peak: PeakStatus): string {
 	return svg(body + pill(112, accent, peak.peak ? "PEAK" : "OFF-PEAK"));
 }
 
+/**
+ * The combined key: the amount, the peak state and the countdown to the next change. The currency code is left
+ * out, because the symbol on the amount already carries it.
+ */
+export function bothImage(view: CreditView, peak: PeakStatus, now: Date): string {
+	let body: string;
+	if (view.kind === "ok") {
+		const amount = formatAmount(view.amount, view.currency);
+		body =
+			text(72, 54, amountSize(amount), view.available ? "#FFFFFF" : PEAK_COLOUR, amount, true) +
+			(view.available ? "" : text(72, 71, 13, PEAK_COLOUR, "INSUFFICIENT", true));
+	} else {
+		const [first, second] = creditMessage(view);
+		const colour = view.kind === "loading" || view.kind === "no-key" ? "#FFFFFF" : WARNING;
+		body = text(72, 33, 18, colour, first, true) + text(72, 55, 18, colour, second, true);
+	}
+	return svg(
+		body +
+			pill(78, peak.peak ? PEAK_COLOUR : OFF_PEAK_COLOUR, peak.peak ? "PEAK" : "OFF-PEAK") +
+			text(72, 128, 21, MUTED, formatCountdown(peak.nextChange.getTime() - now.getTime()), true),
+	);
+}
+
 /** The peak key: current state, countdown to the next change, and what comes next. */
 export function peakImage(peak: PeakStatus, now: Date): string {
 	const colour = peak.peak ? PEAK_COLOUR : OFF_PEAK_COLOUR;
 	const countdown = formatCountdown(peak.nextChange.getTime() - now.getTime());
 	return svg(
 		pill(12, colour, peak.peak ? "PEAK" : "OFF-PEAK") +
-			text(72, 92, countdown.length <= 6 ? 34 : 27, "#FFFFFF", countdown, true) +
-			text(72, 120, 14, MUTED, peak.peak ? "until off-peak" : "until peak"),
+			text(72, 82, countdown.length <= 6 ? 34 : 27, "#FFFFFF", countdown, true) +
+			text(72, 120, 21, MUTED, peak.peak ? "until off-peak" : "until peak"),
 	);
 }
 

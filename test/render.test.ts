@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { creditImage, peakImage, toDataUri } from "../src/render.ts";
+import { bothImage, creditImage, peakImage, toDataUri } from "../src/render.ts";
 
 const now = new Date("2026-09-15T01:45:30Z");
 const peak = { peak: true, nextChange: new Date("2026-09-15T04:00:00Z") };
@@ -47,6 +47,22 @@ describe("creditImage", () => {
 	it("escapes text from the API", () => {
 		const svg = creditImage({ kind: "ok", amount: "1.00", currency: `<b>&"`, available: true }, peak);
 		assert.ok(svg.includes(">&lt;b&gt;&amp;&quot;</text>"));
+	});
+});
+
+describe("bothImage", () => {
+	it("shows the amount, the peak state and the countdown, without the currency code", () => {
+		const svg = bothImage({ kind: "ok", amount: "0.58", currency: "USD", available: true }, peak, now);
+		assert.deepEqual(texts(svg), ["$0.58", "PEAK", "2h 15m"]);
+	});
+
+	it("keeps the insufficient flag and the countdown together", () => {
+		const svg = bothImage({ kind: "ok", amount: "0.00", currency: "USD", available: false }, offPeak, now);
+		assert.deepEqual(texts(svg), ["$0.00", "INSUFFICIENT", "OFF-PEAK", "4h 15m"]);
+	});
+
+	it("shows the countdown even when there is no balance to show", () => {
+		assert.deepEqual(texts(bothImage({ kind: "no-key" }, offPeak, now)), ["Set", "API key", "OFF-PEAK", "4h 15m"]);
 	});
 });
 
