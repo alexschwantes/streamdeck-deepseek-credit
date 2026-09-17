@@ -9,7 +9,7 @@ import streamDeck, {
 
 import { BalanceStore } from "../balance-store.ts";
 import { peakStatus } from "../peak.ts";
-import { creditImage, peakImage } from "../render.ts";
+import { creditImage, peakImage, toDataUri } from "../render.ts";
 
 /** Per-key settings: what the key shows. */
 type KeySettings = { show?: "credit" | "peak" };
@@ -80,7 +80,8 @@ export class DeepSeekCredit extends SingletonAction<KeySettings> {
 		const now = new Date();
 		const peak = peakStatus(now);
 		try {
-			await key.setImage(settings.show === "peak" ? peakImage(peak, now) : creditImage(this.#store.view, peak));
+			// Stream Deck renders an SVG only when it arrives as a data URI; a bare "<svg …>" string is ignored.
+			await key.setImage(toDataUri(settings.show === "peak" ? peakImage(peak, now) : creditImage(this.#store.view, peak)));
 		} catch (err) {
 			streamDeck.logger.error("Failed to draw key", err);
 		}

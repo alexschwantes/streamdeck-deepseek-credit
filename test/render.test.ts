@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { creditImage, peakImage } from "../src/render.ts";
+import { creditImage, peakImage, toDataUri } from "../src/render.ts";
 
 const now = new Date("2026-09-15T01:45:30Z");
 const peak = { peak: true, nextChange: new Date("2026-09-15T04:00:00Z") };
@@ -49,5 +49,14 @@ describe("peakImage", () => {
 	it("shows the state and the countdown to the next change", () => {
 		assert.deepEqual(texts(peakImage(peak, now)), ["PEAK", "2h 15m", "until off-peak"]);
 		assert.deepEqual(texts(peakImage(offPeak, new Date("2026-09-15T05:59:00Z"))), ["OFF-PEAK", "1m", "until peak"]);
+	});
+});
+
+describe("toDataUri", () => {
+	it("encodes the SVG as the data URI Stream Deck requires", () => {
+		const uri = toDataUri(creditImage({ kind: "ok", amount: "0.58", currency: "USD", available: true }, offPeak));
+		const [prefix, base64] = uri.split(",");
+		assert.equal(prefix, "data:image/svg+xml;base64");
+		assert.match(Buffer.from(base64, "base64").toString("utf8"), /^<svg /);
 	});
 });
