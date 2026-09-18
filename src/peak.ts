@@ -6,7 +6,12 @@
  * Monday through Friday (all other hours are off-peak)."
  *
  * To update: edit the days and windows below. Times are minutes after midnight UTC, start inclusive,
- * end exclusive, and a window must not cross midnight.
+ * end exclusive.
+ *
+ * Invariant: every window must end at or before 16:00 UTC. DeepSeek's Chinese docs state the same rule in
+ * Beijing time (UTC+8), and the two agree on which weekday it is only below 16:00 UTC. A window past that
+ * would make the Monday-to-Friday check wrong for the hours that fall on the next Beijing day. `peak.test.ts`
+ * asserts this, so an edit that breaks it fails the tests rather than misreporting prices.
  */
 const PEAK_DAYS: readonly number[] = [1, 2, 3, 4, 5]; // Date.getUTCDay(): 0 = Sunday … 6 = Saturday
 const PEAK_WINDOWS: readonly { start: number; end: number }[] = [

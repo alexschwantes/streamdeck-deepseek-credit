@@ -69,6 +69,18 @@ describe("peakStatus", () => {
 			}
 		}
 	});
+
+	// Guards the invariant documented in peak.ts: a window reaching past 16:00 UTC falls on the next Beijing
+	// day, where DeepSeek's Monday-to-Friday rule no longer means the same thing in both time zones.
+	it("has no peak minute at or after 16:00 UTC", () => {
+		const start = Date.parse("2026-09-14T00:00:00Z"); // a Monday
+		for (let m = 0; m < 7 * 24 * 60; m++) {
+			const at = new Date(start + m * 60_000);
+			if (isPeak(at)) {
+				assert.ok(at.getUTCHours() < 16, `peak at ${at.toISOString()} is past 16:00 UTC`);
+			}
+		}
+	});
 });
 
 describe("formatCountdown", () => {
