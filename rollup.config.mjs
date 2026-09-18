@@ -36,7 +36,9 @@ const config = {
 			preferBuiltins: true
 		}),
 		commonjs(),
-		!isWatching && terser(),
+		// One worker: terser's default pool aborts the build ("Unfinished hook action(s) on exit") on the
+		// low-CPU Linux containers that CI runs on. The bundle is small enough that one worker costs nothing.
+		!isWatching && terser({ maxWorkers: 1 }),
 		{
 			name: "emit-module-package-file",
 			generateBundle() {

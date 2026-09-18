@@ -1,0 +1,82 @@
+# Releases the packed plugin whenever the manifest's Version changes.
+#
+# manifest.json holds the only version in this repo, so it is the trigger as well as the source of truth: bump
+# Version, push to main, and the tag, the GitHub Release and the .streamDeckPlugin asset all follow from it.
+# There is no separate tag to keep in sync, so the manifest and the release can never disagree.
+#
+# manifest.json is also edited for reasons that are not a release (a UUID change, a new action, an icon path),
+# so the version is checked against existing releases and the job stops quietly when it has not moved.
+name: Release
+
+on:
+  push:
+    branches: [main]
+    # Keep this path in step with the .sdPlugin directory name, which carries the plugin UUID.
+    paths: ["io.github.alexschwantes.deepseek-credit.sdPlugin/manifest.json"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+env:
+  # `pack` names the archive after the UUID alone, while the source directory adds the .sdPlugin suffix.
+  UUID: io.github.alexschwantes.deepseek-credit
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node 24 is what the manifest declares, so the release is built on the runtime Stream Deck will use.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Read the version from the manifest
+        id: version
+        run: echo "version=$(jq -r .Version "$UUID.sdPlugin/manifest.json")" >> "$GITHUB_OUTPUT"
+
+      - name: Stop if that version is already released
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "$TAG is already released; nothing to do."
+            echo "new=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "new=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Gate the release on the same checks used locally, so a broken build cannot be published.
+      - name: Typecheck and test
+        if: steps.check.outputs.new == 'true'
+        run: |
+          npm run typecheck
+          npm test
+
+      # `pack` builds and runs `streamdeck validate` before writing the archive.
+      - name: Build and pack
+        if: steps.check.outputs.new == 'true'
+        run: npm run pack
+
+      - name: Create the release
+        if: steps.check.outputs.new == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ steps.version.outputs.version }}
+        run: |
+          gh release create "$TAG" "dist/$UUID.streamDeckPlugin" \
+            --target "$GITHUB_SHA" \
+            --title "$TAG" \
+            --generate-notes \
+            --latest

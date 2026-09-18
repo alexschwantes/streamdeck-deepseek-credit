@@ -60,6 +60,7 @@ Requires Node.js 22.18 or later (the tests run TypeScript directly with `node --
 | `npm test` | Run the automated tests (no Stream Deck or network needed) |
 | `npm run validate` | Build, then validate the plugin with the Stream Deck CLI |
 | `npm run pack` | Build, then package to `dist/io.github.alexschwantes.deepseek-credit.streamDeckPlugin` |
+| `npm run promo` | Redraw the README and marketplace images in `docs/marketplace/` |
 
 ### Running from source
 
@@ -93,3 +94,26 @@ Two Stream Deck behaviours are worth knowing, because both fail silently and loo
 
 `io.github.alexschwantes.deepseek-credit` is the plugin UUID. It can't change after a Marketplace
 release, and the `.sdPlugin` folder name has to match it.
+
+## Releasing
+
+`Version` in `manifest.json` is the only version in this repo, so bumping it *is* the release:
+
+1. Edit `"Version"` in
+   [`io.github.alexschwantes.deepseek-credit.sdPlugin/manifest.json`](io.github.alexschwantes.deepseek-credit.sdPlugin/manifest.json).
+   Stream Deck requires four parts, `{major}.{minor}.{patch}.{build}`, for example `0.2.0.0`.
+2. Commit and push to `main`.
+
+[`.github/workflows/release.yml`](.github/workflows/release.yml) then type-checks, tests, packs, and publishes
+a GitHub Release tagged `v<Version>` with the `.streamDeckPlugin` file attached and notes generated from the
+commits since the last release. Because the tag is derived from the manifest, the two can never disagree.
+
+The workflow also watches `manifest.json` for any other change — a new action, an icon path — so it checks
+whether `v<Version>` already exists and **stops quietly** when the version has not moved. Editing the manifest
+without releasing is safe, and re-running it never publishes twice.
+
+To build a release from a commit that did not touch the manifest, run the workflow by hand from the repository's
+**Actions** tab; the same existing-release check still applies.
+
+Run `npm run typecheck`, `npm test` and `npm run pack` locally first if you want to see the result before
+pushing — the workflow runs exactly those, in that order, on Node 24.
