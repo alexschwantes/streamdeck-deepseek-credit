@@ -5,6 +5,7 @@
         "build": "rollup -c",
         "watch": "rollup -c -w --watch.onEnd=\"node scripts/reload.mjs\"",
         "reload": "node scripts/reload.mjs",
+        "promo": "node scripts/promo.mjs",
         "typecheck": "tsc --noEmit",
         "test": "node --test",
         "validate": "npm run build && streamdeck validate io.github.alexschwantes.deepseek-credit.sdPlugin",

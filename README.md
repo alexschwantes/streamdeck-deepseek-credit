@@ -1,5 +1,7 @@
 # DeepSeek Credit — Stream Deck plugin
 
+![DeepSeek Credit: your API balance, on a key](docs/marketplace/hero.png)
+
 A Windows Stream Deck plugin that shows, at a glance, how much DeepSeek API credit you have left and whether
 DeepSeek is charging **peak** or **off-peak** rates right now. Off-peak rates are half the peak rates, so the
 key tells you both *how much* you can spend and whether now is a *cheap time* to spend it.
@@ -11,6 +13,8 @@ Add the **DeepSeek Credit** action to a key, then choose what it shows in its se
 - **Credit balance**: the currency and total balance DeepSeek reports, with a PEAK / OFF-PEAK bar underneath.
   If DeepSeek says the balance is not enough for API calls, the amount turns red and says INSUFFICIENT.
 - **Peak / off-peak**: the current state and a countdown to the next change, for example `2h 14m` or `2d 15h`.
+
+![Peak and off-peak keys counting down to the next rate change](docs/marketplace/peak.png)
 
 The balance refreshes every 5 minutes, when you change the API key, and when you press the key. Several keys
 share one request. The peak state and countdown update every minute and never call the API.
