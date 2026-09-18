@@ -110,7 +110,7 @@ function formatAmount(amount: string, currency: string): string {
  * glyph width and a 132px usable width. Capped so a short amount does not grow absurd.
  */
 function amountSize(amount: string): number {
-	return Math.min(44, Math.floor(132 / (amount.length * 0.55)));
+	return Math.min(43, Math.floor(132 / (amount.length * 0.55)));
 }
 
 /** A short accent rule under the top label. */
