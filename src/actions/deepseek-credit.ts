@@ -21,7 +21,7 @@ type GlobalSettings = { apiKey?: string };
  * Shows remaining DeepSeek API credit, or peak / off-peak pricing, on a key. All keys share one API key and one
  * balance request; key faces are redrawn every whole minute from the cached balance, with no network call.
  */
-@action({ UUID: "com.example.deepseek-credit.status" })
+@action({ UUID: "io.github.alexschwantes.deepseek-credit.status" })
 export class DeepSeekCredit extends SingletonAction<KeySettings> {
 	readonly #store = new BalanceStore(() => {
 		const view = this.#store.view;

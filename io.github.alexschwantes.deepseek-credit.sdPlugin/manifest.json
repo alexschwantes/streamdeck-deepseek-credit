@@ -5,7 +5,7 @@
 	"Actions": [
 		{
 			"Name": "DeepSeek Credit",
-			"UUID": "com.example.deepseek-credit.status",
+			"UUID": "io.github.alexschwantes.deepseek-credit.status",
 			"Icon": "imgs/actions/status/icon",
 			"Tooltip": "Shows remaining DeepSeek API credit and peak / off-peak pricing.",
 			"PropertyInspectorPath": "ui/deepseek-credit.html",
@@ -39,5 +39,5 @@
 	"Nodejs": {
 		"Version": "24"
 	},
-	"UUID": "com.example.deepseek-credit"
+	"UUID": "io.github.alexschwantes.deepseek-credit"
 }

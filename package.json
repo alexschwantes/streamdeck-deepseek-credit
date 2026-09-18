@@ -7,8 +7,8 @@
         "reload": "node scripts/reload.mjs",
         "typecheck": "tsc --noEmit",
         "test": "node --test",
-        "validate": "npm run build && streamdeck validate com.example.deepseek-credit.sdPlugin",
-        "pack": "npm run build && streamdeck pack com.example.deepseek-credit.sdPlugin --output dist --force"
+        "validate": "npm run build && streamdeck validate io.github.alexschwantes.deepseek-credit.sdPlugin",
+        "pack": "npm run build && streamdeck pack io.github.alexschwantes.deepseek-credit.sdPlugin --output dist --force"
     },
     "type": "module",
     "engines": {

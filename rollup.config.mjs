@@ -6,7 +6,7 @@ import path from "node:path";
 import url from "node:url";
 
 const isWatching = !!process.env.ROLLUP_WATCH;
-const sdPlugin = "com.example.deepseek-credit.sdPlugin";
+const sdPlugin = "io.github.alexschwantes.deepseek-credit.sdPlugin";
 
 /**
  * @type {import('rollup').RollupOptions}

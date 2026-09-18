@@ -16,7 +16,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync, realpathSync } from "node:fs";
 import path from "node:path";
 
-const UUID = "com.example.deepseek-credit";
+const UUID = "io.github.alexschwantes.deepseek-credit";
 const SOURCE = path.resolve(`${UUID}.sdPlugin`);
 const DEV_MODE_KEY = "HKCU\\Software\\Elgato Systems GmbH\\StreamDeck";
 
