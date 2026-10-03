@@ -1,6 +1,12 @@
 {
     "name": "streamdeck-deepseek-credit",
-    "private": true,
+    "author": "Alex Schwantes",
+    "license": "MIT",
+    "description": "A Stream Deck plugin that displays the current DeepSeek credit balance.",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/alexschwantes/streamdeck-deepseek-credit.git"
+    },
     "scripts": {
         "build": "rollup -c",
         "watch": "rollup -c -w --watch.onEnd=\"node scripts/reload.mjs\"",

@@ -1,43 +1,43 @@
 {
-	"Name": "DeepSeek Credit",
-	"Version": "0.1.0.0",
-	"Author": "highland-hamish",
-	"Actions": [
-		{
-			"Name": "DeepSeek Credit",
-			"UUID": "io.github.alexschwantes.deepseek-credit.status",
-			"Icon": "imgs/actions/status/icon",
-			"Tooltip": "Shows remaining DeepSeek API credit and peak / off-peak pricing.",
-			"PropertyInspectorPath": "ui/deepseek-credit.html",
-			"Controllers": [
-				"Keypad"
-			],
-			"States": [
-				{
-					"Image": "imgs/actions/status/key",
-					"TitleAlignment": "middle"
-				}
-			],
-			"UserTitleEnabled": false
-		}
-	],
-	"Category": "DeepSeek Credit",
-	"CategoryIcon": "imgs/plugin/category-icon",
-	"CodePath": "bin/plugin.js",
-	"Description": "Shows remaining DeepSeek API credit and whether peak or off-peak pricing applies.",
-	"Icon": "imgs/plugin/marketplace",
-	"SDKVersion": 3,
-	"Software": {
-		"MinimumVersion": "7.1"
-	},
-	"OS": [
-		{
-			"Platform": "windows",
-			"MinimumVersion": "10"
-		}
-	],
-	"Nodejs": {
-		"Version": "24"
-	},
-	"UUID": "io.github.alexschwantes.deepseek-credit"
+    "Name": "DeepSeek Credit",
+    "Version": "0.1.0.0",
+    "Author": "Alex Schwantes",
+    "Actions": [
+        {
+            "Name": "DeepSeek Credit",
+            "UUID": "io.github.alexschwantes.deepseek-credit.status",
+            "Icon": "imgs/actions/status/icon",
+            "Tooltip": "Shows remaining DeepSeek API credit and peak / off-peak pricing.",
+            "PropertyInspectorPath": "ui/deepseek-credit.html",
+            "Controllers": [
+                "Keypad"
+            ],
+            "States": [
+                {
+                    "Image": "imgs/actions/status/key",
+                    "TitleAlignment": "middle"
+                }
+            ],
+            "UserTitleEnabled": false
+        }
+    ],
+    "Category": "DeepSeek Credit",
+    "CategoryIcon": "imgs/plugin/category-icon",
+    "CodePath": "bin/plugin.js",
+    "Description": "Shows remaining DeepSeek API credit and whether peak or off-peak pricing applies.",
+    "Icon": "imgs/plugin/marketplace",
+    "SDKVersion": 3,
+    "Software": {
+        "MinimumVersion": "7.1"
+    },
+    "OS": [
+        {
+            "Platform": "windows",
+            "MinimumVersion": "10"
+        }
+    ],
+    "Nodejs": {
+        "Version": "24"
+    },
+    "UUID": "io.github.alexschwantes.deepseek-credit"
 }
