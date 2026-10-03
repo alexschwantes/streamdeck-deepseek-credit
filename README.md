@@ -4,7 +4,7 @@
 
 A Windows Stream Deck plugin that shows, at a glance, how much DeepSeek API credit you have left and whether
 DeepSeek is charging **peak** or **off-peak** rates right now. Off-peak rates are half the peak rates, so the
-key tells you both *how much* you can spend and whether now is a *cheap time* to spend it.
+key tells you both _how much_ you can spend and whether now is a _cheap time_ to spend it.
 
 ## What the keys show
 
@@ -29,7 +29,7 @@ If the balance can't be shown, the key says why: `Set API key`, `Invalid API key
 
 You only enter it once: it applies to every DeepSeek Credit key and takes effect straight away.
 
-**Where it's stored:** in Stream Deck's plugin settings on this PC (the plugin's *global settings*), not in
+**Where it's stored:** in Stream Deck's plugin settings on this PC (the plugin's _global settings_), not in
 Windows Credential Manager or another keychain. The plugin never writes the key to its log files.
 
 ## Peak hours
@@ -43,24 +43,28 @@ DeepSeek has changed its pricing before. If the hours change, edit the schedule 
 
 ## Installing
 
-Build the package (see below), then double-click `dist/io.github.alexschwantes.deepseek-credit.streamDeckPlugin` on the
-Windows PC to install it into Stream Deck.
+1. Download `io.github.alexschwantes.deepseek-credit.streamDeckPlugin` from the
+   [latest release](https://github.com/alexschwantes/streamdeck-deepseek-credit/releases/latest).
+2. Double-click it on the Windows PC. Stream Deck installs the plugin.
+
+To install a build of your own instead, run `npm run pack` (see [Development](#development)) and double-click
+`dist/io.github.alexschwantes.deepseek-credit.streamDeckPlugin`.
 
 ## Development
 
 Requires Node.js 22.18 or later (the tests run TypeScript directly with `node --test`).
 
-| Command | What it does |
-|---------|--------------|
-| `npm install` | Install dependencies |
-| `npm run build` | Build `src/` into `io.github.alexschwantes.deepseek-credit.sdPlugin/bin/` |
-| `npm run watch` | Rebuild on change, then reload the plugin in Stream Deck |
-| `npm run reload` | Set up Stream Deck if needed, then reload the plugin once |
-| `npm run typecheck` | Type-check source and tests (the build does not fail on type errors) |
-| `npm test` | Run the automated tests (no Stream Deck or network needed) |
-| `npm run validate` | Build, then validate the plugin with the Stream Deck CLI |
-| `npm run pack` | Build, then package to `dist/io.github.alexschwantes.deepseek-credit.streamDeckPlugin` |
-| `npm run promo` | Redraw the README and marketplace images in `docs/marketplace/` |
+| Command             | What it does                                                                           |
+| ------------------- | -------------------------------------------------------------------------------------- |
+| `npm install`       | Install dependencies                                                                   |
+| `npm run build`     | Build `src/` into `io.github.alexschwantes.deepseek-credit.sdPlugin/bin/`              |
+| `npm run watch`     | Rebuild on change, then reload the plugin in Stream Deck                               |
+| `npm run reload`    | Set up Stream Deck if needed, then reload the plugin once                              |
+| `npm run typecheck` | Type-check source and tests (the build does not fail on type errors)                   |
+| `npm test`          | Run the automated tests (no Stream Deck or network needed)                             |
+| `npm run validate`  | Build, then validate the plugin with the Stream Deck CLI                               |
+| `npm run pack`      | Build, then package to `dist/io.github.alexschwantes.deepseek-credit.streamDeckPlugin` |
+| `npm run promo`     | Redraw the README and marketplace images in `docs/marketplace/`                        |
 
 ### Running from source
 
@@ -80,24 +84,24 @@ Two Stream Deck behaviours are worth knowing, because both fail silently and loo
 - `streamdeck restart` only opens `streamdeck://plugins/restart/<uuid>` and reports success whether or not
   Stream Deck acts on it. With developer mode off it does nothing at all. The script kills the plugin's node
   process instead, and Stream Deck relaunches it.
-- A plugin installed from a `.streamDeckPlugin` file is a *copy*, so builds in this repo never reach it. The
+- A plugin installed from a `.streamDeckPlugin` file is a _copy_, so builds in this repo never reach it. The
   script refuses to run against a copied install rather than reloading stale code.
 
-| File | Purpose |
-|------|---------|
-| `src/peak.ts` | Peak schedule, peak state, next change, countdown text |
-| `src/balance.ts` | Calls DeepSeek's balance API and classifies the result |
-| `src/balance-store.ts` | Shared API key, cached balance and refresh rules |
-| `src/render.ts` | Key faces (SVG) |
-| `src/actions/deepseek-credit.ts` | The Stream Deck action: events, per-minute redraw |
-| `io.github.alexschwantes.deepseek-credit.sdPlugin/` | Manifest, settings panel (`ui/`) and images |
+| File                                                | Purpose                                                |
+| --------------------------------------------------- | ------------------------------------------------------ |
+| `src/peak.ts`                                       | Peak schedule, peak state, next change, countdown text |
+| `src/balance.ts`                                    | Calls DeepSeek's balance API and classifies the result |
+| `src/balance-store.ts`                              | Shared API key, cached balance and refresh rules       |
+| `src/render.ts`                                     | Key faces (SVG)                                        |
+| `src/actions/deepseek-credit.ts`                    | The Stream Deck action: events, per-minute redraw      |
+| `io.github.alexschwantes.deepseek-credit.sdPlugin/` | Manifest, settings panel (`ui/`) and images            |
 
 `io.github.alexschwantes.deepseek-credit` is the plugin UUID. It can't change after a Marketplace
 release, and the `.sdPlugin` folder name has to match it.
 
 ## Releasing
 
-`Version` in `manifest.json` is the only version in this repo, so bumping it *is* the release:
+`Version` in `manifest.json` is the only version in this repo, so bumping it _is_ the release:
 
 1. Edit `"Version"` in
    [`io.github.alexschwantes.deepseek-credit.sdPlugin/manifest.json`](io.github.alexschwantes.deepseek-credit.sdPlugin/manifest.json).
