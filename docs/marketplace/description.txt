@@ -1,0 +1,14 @@
+DeepSeek Credit shows your DeepSeek API balance on your Stream Deck. See how much credit you have left and whether DeepSeek is charging peak or off-peak rates, so you know what you can spend and when spending is cheapest.
+
+DeepSeek halves its API prices outside peak hours: 01:00-04:00 and 06:00-10:00 UTC, Monday to Friday. One glance shows whether now is cheap and how long until rates change.
+
+- Credit balance: the currency and total balance DeepSeek reports.
+- Peak / off-peak: the current rate period and a countdown to the next change, such as 2h 14m.
+- Low balance warning: the amount turns red and reads INSUFFICIENT when DeepSeek says the balance is too low for calls.
+- Honest errors: Set API key, Invalid API key, HTTP error, Timed out, Network error or Unexpected response; never an invented amount.
+- Light on your account: balance refreshes every 5 minutes, on key presses and API key changes, and keys share one request; peak state updates every minute with no API call.
+- Any time zone: peak and off-peak are worked out in UTC, so your clock setting does not matter.
+
+Setup: drag the action onto a key, choose Credit balance or Peak / off-peak, then paste your API key once in the action settings. It applies to every DeepSeek Credit key immediately.
+
+Requires Windows 10 or later, Stream Deck 7.1 or later and a DeepSeek API key from the DeepSeek platform; normal DeepSeek API rates apply. The balance needs an internet connection.
